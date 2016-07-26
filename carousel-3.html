@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>加上图片的自动切换展示功能</title>
+    <style type="text/css">
+        .img-wrap {
+            width: 230px;
+            position: absolute;
+            top: 100px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .img-wrap img {
+            width: 230px;
+            height: 165px;
+            position: absolute;
+        }
+
+        .span-wrap {
+            width: 230px;
+            height: 20px;
+            position: absolute;
+            top: 240px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            text-align: center;
+        }
+
+        .span-wrap span {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            border-radius: 50%;
+            background-color: #cdcdcd;
+            cursor: pointer;
+        }
+
+        .pre-next-wrap {
+            width: 260px;
+            position: absolute;
+            top: 160px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .pre-next-wrap .pre {
+            float: left;
+            cursor: pointer;
+        }
+
+        .pre-next-wrap .next {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="img-wrap">
+    <img src="../images/67.jpg">
+    <img src="../images/68.jpg">
+    <img src="../images/69.jpg">
+    <img src="../images/70.jpg">
+    <img src="../images/71.jpg">
+</div>
+<div class="span-wrap">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<div class="pre-next-wrap">
+    <div class="pre"> <</div>
+    <div class="next"> ></div>
+</div>
+<script>
+    var imgs = document.getElementsByTagName("img");
+    var imgNum = imgs.length || 0;
+    var circles = document.getElementsByTagName("span");
+    var spanWrap = document.getElementsByClassName("span-wrap")[0];
+    var pre = document.getElementsByClassName("pre")[0];
+    var next = document.getElementsByClassName("next")[0];
+
+    var imgIndex = 0;// 当前展示的图片的index
+
+
+    pre.onclick = function () {
+        imgIndex--;
+        if (imgIndex < 0) {
+            imgIndex = imgNum - Math.abs(imgIndex)
+        }
+        imgSwitch(imgIndex)
+    };
+
+    next.onclick = function () {
+        imgIndex++;
+        if (imgIndex >= imgNum) {
+            imgIndex = imgIndex % imgNum
+        }
+        imgSwitch(imgIndex)
+    };
+
+    spanWrap.onclick = function (event) {
+        var targetSpan = event.target || event.srcElement;
+        // 看是第几个circle
+        var i = 0;
+        if (targetSpan.sourceIndex) {
+            i = targetSpan.parentNode.sourceIndex - 1;
+        } else {
+            while (targetSpan = targetSpan.previousElementSibling) {
+                i++;
+            }
+        }
+        imgIndex = i;
+        imgSwitch(i);
+    }
+
+
+    // 图片切换
+    function imgSwitch(index) {
+        for (var i = 0; i < imgNum; i++) {
+            if (i == index) {
+                defaultImg(i);
+            } else {
+                imgs[i].style.display = "none";
+                circles[i].style.backgroundColor = "#cdcdcd";
+            }
+        }
+    }
+
+    // 自动切换图片
+    setInterval(function(){
+        imgIndex++;
+        if(imgIndex>=imgNum){
+            imgIndex=imgIndex%imgNum;
+        }
+        imgSwitch(imgIndex)
+    },5000);
+
+    function defaultImg(index) {
+        imgs[index].style.display = "block";
+        circles[index].style.backgroundColor = "red";
+    }
+
+    defaultImg(imgIndex)
+
+</script>
+</body>
+</html>
